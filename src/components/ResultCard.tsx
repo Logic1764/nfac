@@ -8,6 +8,8 @@ type ResultCardProps = {
 };
 
 export function ResultCard({ score, total, onRestart, needsSignIn }: ResultCardProps) {
+  const percentage = Math.round((score / total) * 100);
+
   return (
     <div className="quiz-card result-card">
       <span className="result-card__planet" aria-hidden="true">✦</span>
@@ -16,6 +18,7 @@ export function ResultCard({ score, total, onRestart, needsSignIn }: ResultCardP
       <p className="result-score" aria-label={`Результат: ${score} из ${total}`}>
         {score} <span>из {total}</span>
       </p>
+      <p className="result-percentage">{percentage}% правильных ответов</p>
       <p className="result-message">Отличный полёт! Теперь ты знаешь о космосе ещё больше.</p>
       {needsSignIn && (
         <p className="result-message">
