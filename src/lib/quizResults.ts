@@ -12,6 +12,11 @@ export async function saveQuizResult(
   const { data, error: sessionError } = await supabase.auth.getSession();
   const userId = data.session?.user?.id;
 
+  console.log('Save session:', {
+    userId: userId ?? null,
+    hasSession: Boolean(data.session),
+  });
+
   if (sessionError || !userId) {
     console.log('Quiz result save attempt:', { userId: null, success: false });
     if (sessionError) console.error('Не удалось получить сессию:', sessionError);

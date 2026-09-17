@@ -1,11 +1,9 @@
 import { useState } from 'react';
-import { useAuthSession } from '../lib/AuthSessionContext';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import { SupabaseSetupMessage } from './SupabaseSetupMessage';
 
 // Вход и регистрация по email + паролю. Это пример — Codex поможет улучшить (Google-вход и т.д.).
 export function Auth() {
-  const { setAuthSession } = useAuthSession();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
@@ -19,22 +17,26 @@ export function Auth() {
     setBusy(true);
     setMessage('');
     try {
-      const fn =
-        mode === 'signup'
-          ? supabase.auth.signUp({
-              email,
-              password,
-              options: { emailRedirectTo: window.location.origin },
-            })
-          : supabase.auth.signInWithPassword({ email, password });
-      const { data, error } = await fn;
-      if (error) setMessage(error.message);
-      else {
-        setAuthSession(data.session);
-        if (mode === 'signup') {
-          setMessage('Готово! Проверь почту, если нужна подтверждалка.');
-        }
+      if (mode === 'signup') {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: { emailRedirectTo: window.location.origin },
+        });
+        setMessage(error?.message ?? 'Готово! Проверь почту, если нужна подтверждалка.');
+        return;
       }
+
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) {
+        setMessage(error.message);
+        return;
+      }
+
+      console.log('Auth login session:', {
+        userId: data.session?.user.id ?? null,
+        hasSession: Boolean(data.session),
+      });
     } catch {
       setMessage('Что-то пошло не так. Попробуй ещё раз.');
     } finally {
