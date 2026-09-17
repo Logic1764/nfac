@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'wouter';
 import { useAuthSession } from '../lib/AuthSessionContext';
 import { supabase } from '../lib/supabase';
 
@@ -26,7 +27,7 @@ export function UserMenu() {
 
   return (
     <div className="user-menu">
-      <span className="user-menu__email">{user.email}</span>
+      <Link className="user-menu__profile-link" href="/profile">Профиль</Link>
       <button
         className="user-menu__sign-out"
         disabled={isSigningOut}

@@ -3,6 +3,7 @@ import { AuthSessionProvider } from './lib/AuthSessionContext';
 import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { NotFoundPage } from './pages/NotFoundPage';
+import { ProfilePage } from './pages/ProfilePage';
 
 // Здесь живут только маршруты. Сами экраны складывай в src/pages/.
 export default function App() {
@@ -11,6 +12,7 @@ export default function App() {
       <Switch>
         <Route path="/" component={HomePage} />
         <Route path="/login" component={LoginPage} />
+        <Route path="/profile" component={ProfilePage} />
         <Route component={NotFoundPage} />
       </Switch>
     </AuthSessionProvider>
