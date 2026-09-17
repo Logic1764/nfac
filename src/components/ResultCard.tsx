@@ -11,11 +11,11 @@ export function ResultCard({ score, total, onRestart }: ResultCardProps) {
       <p className="eyebrow">Тест завершён</p>
       <h2>Твой результат</h2>
       <p className="result-score" aria-label={`Результат: ${score} из ${total}`}>
-        {score} из {total}
+        Правильных ответов: {score} из {total}
       </p>
       <p className="result-message">Отличный полёт! Теперь ты знаешь о космосе ещё больше.</p>
       <button className="restart-button" onClick={onRestart} type="button">
-        Пройти ещё раз
+        Пройти еще раз
       </button>
     </div>
   );

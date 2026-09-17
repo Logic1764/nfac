@@ -42,6 +42,7 @@ export function HomePage() {
           />
         ) : (
           <QuestionCard
+            key={questionIndex}
             question={astronomyQuestions[questionIndex]}
             questionNumber={questionIndex + 1}
             total={astronomyQuestions.length}

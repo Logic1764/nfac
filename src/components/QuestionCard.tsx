@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { QuizQuestion } from '../lib/astronomyQuestions';
 
 type QuestionCardProps = {
@@ -15,7 +16,15 @@ export function QuestionCard({
   total,
   onAnswer,
 }: QuestionCardProps) {
+  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const progress = `${(questionNumber / total) * 100}%`;
+  const isLastQuestion = questionNumber === total;
+
+  function submitAnswer() {
+    if (selectedAnswer !== null) {
+      onAnswer(selectedAnswer);
+    }
+  }
 
   return (
     <div className="quiz-card">
@@ -31,9 +40,10 @@ export function QuestionCard({
       <div className="answers" role="group" aria-label="Варианты ответа">
         {question.answers.map((answer, index) => (
           <button
-            className="answer-button"
+            aria-pressed={selectedAnswer === index}
+            className={`answer-button${selectedAnswer === index ? ' answer-button--selected' : ''}`}
             key={answer}
-            onClick={() => onAnswer(index)}
+            onClick={() => setSelectedAnswer(index)}
             type="button"
           >
             <span className="answer-letter">{answerLetters[index]}</span>
@@ -41,6 +51,14 @@ export function QuestionCard({
           </button>
         ))}
       </div>
+      <button
+        className="next-button"
+        disabled={selectedAnswer === null}
+        onClick={submitAnswer}
+        type="button"
+      >
+        {isLastQuestion ? 'Показать результат' : 'Следующий вопрос'}
+      </button>
     </div>
   );
 }

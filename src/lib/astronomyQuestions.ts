@@ -35,4 +35,9 @@ export const astronomyQuestions: QuizQuestion[] = [
     answers: ['Европа', 'Титан', 'Луна', 'Фобос'],
     correctAnswer: 2,
   },
+  {
+    text: 'Какая планета Солнечной системы самая большая?',
+    answers: ['Сатурн', 'Юпитер', 'Нептун', 'Уран'],
+    correctAnswer: 1,
+  },
 ];
