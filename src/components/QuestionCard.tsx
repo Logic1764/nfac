@@ -10,6 +10,20 @@ type QuestionCardProps = {
 
 const answerLetters = ['A', 'B', 'C', 'D'];
 
+function shuffleAnswers(answers: string[]) {
+  const shuffledAnswers = answers.map((text, originalIndex) => ({ text, originalIndex }));
+
+  for (let index = shuffledAnswers.length - 1; index > 0; index -= 1) {
+    const randomIndex = Math.floor(Math.random() * (index + 1));
+    [shuffledAnswers[index], shuffledAnswers[randomIndex]] = [
+      shuffledAnswers[randomIndex],
+      shuffledAnswers[index],
+    ];
+  }
+
+  return shuffledAnswers;
+}
+
 export function QuestionCard({
   question,
   questionNumber,
@@ -17,12 +31,13 @@ export function QuestionCard({
   onAnswer,
 }: QuestionCardProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  const [shuffledAnswers] = useState(() => shuffleAnswers(question.answers));
   const progress = `${(questionNumber / total) * 100}%`;
   const isLastQuestion = questionNumber === total;
 
   function submitAnswer() {
     if (selectedAnswer !== null) {
-      onAnswer(selectedAnswer);
+      onAnswer(shuffledAnswers[selectedAnswer].originalIndex);
     }
   }
 
@@ -38,16 +53,16 @@ export function QuestionCard({
 
       <h2>{question.text}</h2>
       <div className="answers" role="group" aria-label="Варианты ответа">
-        {question.answers.map((answer, index) => (
+        {shuffledAnswers.map((answer, index) => (
           <button
             aria-pressed={selectedAnswer === index}
             className={`answer-button${selectedAnswer === index ? ' answer-button--selected' : ''}`}
-            key={answer}
+            key={answer.originalIndex}
             onClick={() => setSelectedAnswer(index)}
             type="button"
           >
             <span className="answer-letter">{answerLetters[index]}</span>
-            <span>{answer}</span>
+            <span>{answer.text}</span>
           </button>
         ))}
       </div>
