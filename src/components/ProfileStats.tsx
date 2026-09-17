@@ -1,4 +1,6 @@
 import type { QuizResult } from '../lib/quizResults';
+import { calculateXpProgress } from '../lib/xp';
+import { XpCard } from './XpCard';
 
 type ProfileStatsProps = {
   results: QuizResult[];
@@ -9,8 +11,15 @@ function formatResult(result: QuizResult) {
 }
 
 export function ProfileStats({ results }: ProfileStatsProps) {
+  const xpProgress = calculateXpProgress(results);
+
   if (results.length === 0) {
-    return <p className="profile-empty">Вы еще не проходили тесты</p>;
+    return (
+      <>
+        <XpCard progress={xpProgress} />
+        <p className="profile-empty">Вы еще не проходили тесты</p>
+      </>
+    );
   }
 
   const latest = results[0];
@@ -26,11 +35,14 @@ export function ProfileStats({ results }: ProfileStatsProps) {
   }).format(new Date(latest.createdAt));
 
   return (
-    <dl className="profile-stats">
-      <div><dt>Пройдено тестов</dt><dd>{results.length}</dd></div>
-      <div><dt>Лучший результат</dt><dd>{formatResult(best)}</dd></div>
-      <div><dt>Последний результат</dt><dd>{formatResult(latest)}</dd></div>
-      <div><dt>Последнее прохождение</dt><dd>{lastCompletedAt}</dd></div>
-    </dl>
+    <>
+      <XpCard progress={xpProgress} />
+      <dl className="profile-stats">
+        <div><dt>Пройдено тестов</dt><dd>{results.length}</dd></div>
+        <div><dt>Лучший результат</dt><dd>{formatResult(best)}</dd></div>
+        <div><dt>Последний результат</dt><dd>{formatResult(latest)}</dd></div>
+        <div><dt>Последнее прохождение</dt><dd>{lastCompletedAt}</dd></div>
+      </dl>
+    </>
   );
 }
