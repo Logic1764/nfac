@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { QuestionCard } from '../components/QuestionCard';
 import { ResultCard } from '../components/ResultCard';
+import { UserMenu } from '../components/UserMenu';
 import { useAuthSession } from '../lib/AuthSessionContext';
 import { astronomyQuestions } from '../lib/astronomyQuestions';
 import { saveQuizResult } from '../lib/quizResults';
@@ -45,6 +46,7 @@ export function HomePage() {
             <p className="eyebrow">Космический тест</p>
             <h1 id="quiz-title">Проверь знания по астрономии</h1>
           </div>
+          <UserMenu />
         </header>
 
         {isFinished ? (
