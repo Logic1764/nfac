@@ -5,6 +5,7 @@ import { isSupabaseConfigured, supabase } from './supabase';
 type AuthSessionContextValue = {
   session: Session | null;
   isLoading: boolean;
+  setAuthSession: (session: Session | null) => void;
 };
 
 const AuthSessionContext = createContext<AuthSessionContextValue | undefined>(undefined);
@@ -42,7 +43,7 @@ export function AuthSessionProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <AuthSessionContext.Provider value={{ session, isLoading }}>
+    <AuthSessionContext.Provider value={{ session, isLoading, setAuthSession: setSession }}>
       {children}
     </AuthSessionContext.Provider>
   );
