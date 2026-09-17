@@ -49,31 +49,37 @@ export function Auth() {
   }
 
   return (
-    <section className="card">
-      <h2>{mode === 'signin' ? 'Вход' : 'Регистрация'}</h2>
+    <section className="quiz-card auth-card">
+      <p className="eyebrow">Один шаг до старта</p>
+      <h2>{mode === 'signin' ? 'Войди и начни викторину' : 'Создай аккаунт'}</h2>
+      <p className="auth-card__description">Результаты прохождений сохранятся в твоём профиле.</p>
       <form onSubmit={handleSubmit} className="form">
+        <label htmlFor="auth-email">Email</label>
         <input
+          id="auth-email"
           type="email"
-          placeholder="email"
+          placeholder="you@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
+        <label htmlFor="auth-password">Пароль</label>
         <input
+          id="auth-password"
           type="password"
-          placeholder="пароль (6+ символов)"
+          placeholder="Минимум 6 символов"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           minLength={6}
           required
         />
-        <button type="submit" disabled={busy}>
+        <button className="primary-button" type="submit" disabled={busy}>
           {busy ? '…' : mode === 'signin' ? 'Войти' : 'Создать аккаунт'}
         </button>
       </form>
       {message && <p className="message">{message}</p>}
       <button
-        className="ghost"
+        className="text-button"
         onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
       >
         {mode === 'signin' ? 'Нет аккаунта? Зарегистрируйся' : 'Уже есть аккаунт? Войти'}

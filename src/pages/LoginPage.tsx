@@ -3,9 +3,12 @@ import { Auth } from '../components/Auth';
 
 export function LoginPage() {
   return (
-    <main>
-      <Auth />
-      <Link href="/">Вернуться к викторине</Link>
+    <main className="quiz-page">
+      <div className="stars" aria-hidden="true" />
+      <section className="quiz-shell auth-page">
+        <Link className="profile-back" href="/">← К викторине</Link>
+        <Auth />
+      </section>
     </main>
   );
 }
