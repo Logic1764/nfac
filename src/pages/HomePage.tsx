@@ -43,10 +43,12 @@ export function HomePage() {
       <div className="stars" aria-hidden="true" />
       <section className="quiz-shell" aria-labelledby="quiz-title">
         <header className="quiz-header">
-          <span className="quiz-header__icon" aria-hidden="true">✦</span>
-          <div>
-            <p className="eyebrow">Космический тест</p>
-            <h1 id="quiz-title">Проверь знания по астрономии</h1>
+          <div className="quiz-brand">
+            <span className="quiz-header__icon" aria-hidden="true">✦</span>
+            <div>
+              <p className="quiz-brand__name">Орбита</p>
+              <h1 id="quiz-title">Астрономическая викторина</h1>
+            </div>
           </div>
           <UserMenu />
         </header>

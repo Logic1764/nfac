@@ -50,9 +50,31 @@ export function Auth() {
 
   return (
     <section className="quiz-card auth-card">
-      <p className="eyebrow">Один шаг до старта</p>
-      <h2>{mode === 'signin' ? 'Войди и начни викторину' : 'Создай аккаунт'}</h2>
-      <p className="auth-card__description">Результаты прохождений сохранятся в твоём профиле.</p>
+      <div className="auth-card__heading">
+        <p className="eyebrow">Добро пожаловать на орбиту</p>
+        <h2>{mode === 'signin' ? 'Войди, чтобы начать' : 'Создай аккаунт'}</h2>
+        <p className="auth-card__description">
+          6 вопросов о планетах, звёздах и космосе. Результат сохраним в профиле.
+        </p>
+      </div>
+      <div className="auth-tabs" aria-label="Выбор входа или регистрации">
+        <button
+          aria-pressed={mode === 'signin'}
+          className={mode === 'signin' ? 'auth-tabs__button auth-tabs__button--active' : 'auth-tabs__button'}
+          onClick={() => setMode('signin')}
+          type="button"
+        >
+          Вход
+        </button>
+        <button
+          aria-pressed={mode === 'signup'}
+          className={mode === 'signup' ? 'auth-tabs__button auth-tabs__button--active' : 'auth-tabs__button'}
+          onClick={() => setMode('signup')}
+          type="button"
+        >
+          Регистрация
+        </button>
+      </div>
       <form onSubmit={handleSubmit} className="form">
         <label htmlFor="auth-email">Email</label>
         <input
@@ -74,16 +96,10 @@ export function Auth() {
           required
         />
         <button className="primary-button" type="submit" disabled={busy}>
-          {busy ? '…' : mode === 'signin' ? 'Войти' : 'Создать аккаунт'}
+          {busy ? 'Подождите…' : mode === 'signin' ? 'Войти и начать' : 'Создать аккаунт'}
         </button>
       </form>
       {message && <p className="message">{message}</p>}
-      <button
-        className="text-button"
-        onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
-      >
-        {mode === 'signin' ? 'Нет аккаунта? Зарегистрируйся' : 'Уже есть аккаунт? Войти'}
-      </button>
     </section>
   );
 }
