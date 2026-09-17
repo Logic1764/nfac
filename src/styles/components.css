@@ -22,6 +22,16 @@
 .intro-card__meta { display: flex; flex-wrap: wrap; gap: 12px 24px; margin: 28px 0; color: var(--muted); font-size: 14px; font-weight: 600; }
 .intro-card__button { width: 100%; }
 
+.generator-card h2 { margin-bottom: 20px; }
+.generator-form { display: grid; gap: 9px; }
+.generator-form label { color: var(--muted); font-size: 13px; font-weight: 700; }
+.generator-form__controls { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+.generator-form input { min-width: 0; min-height: 48px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius-small); color: var(--text); background: #0d1323; }
+.generator-form input::placeholder { color: #69728b; }
+.generator-form input:focus { border-color: var(--accent); outline: 3px solid rgba(108, 99, 255, 0.2); }
+.generator-card__notice { margin-top: 12px; color: var(--muted); font-size: 12px; line-height: 1.5; }
+.generator-card__error { margin-top: 12px; color: #ff9ca8; font-size: 14px; line-height: 1.5; }
+
 .progress-row { display: flex; justify-content: space-between; color: var(--muted); font-size: 14px; font-weight: 700; }
 .progress-track { height: 6px; margin: 12px 0 34px; overflow: hidden; border-radius: 99px; background: #252c40; }
 .progress-bar { height: 100%; border-radius: inherit; background: var(--accent); transition: width 220ms ease; }
@@ -86,6 +96,8 @@
 .profile-error { color: #ff9ca8; }
 
 @media (max-width: 420px) {
+  .generator-form__controls { grid-template-columns: 1fr; }
+  .generator-form__controls .primary-button { width: 100%; }
   .intro-card__orbit { width: 52px; height: 52px; margin-bottom: 20px; }
   .intro-card h2 { margin-bottom: 14px; font-size: 28px; }
   .intro-card__text { font-size: 15px; line-height: 1.55; }
