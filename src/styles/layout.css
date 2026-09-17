@@ -2,6 +2,7 @@
   position: relative;
   display: grid;
   min-height: 100vh;
+  min-height: 100dvh;
   place-items: center;
   overflow: hidden;
   padding: 48px 24px;
@@ -20,7 +21,7 @@
     radial-gradient(circle at 19% 76%, #aab2c8 1px, transparent 1.5px);
 }
 
-.quiz-shell { position: relative; width: min(100%, 760px); }
+.quiz-shell { position: relative; width: min(100%, 760px); min-width: 0; }
 
 .quiz-header {
   display: flex;
@@ -30,7 +31,8 @@
   margin-bottom: 32px;
 }
 
-.quiz-brand { display: flex; align-items: center; gap: 14px; }
+.quiz-brand { display: flex; min-width: 0; align-items: center; gap: 14px; }
+.quiz-brand > div { min-width: 0; }
 .quiz-brand__name { margin-bottom: 3px; color: var(--text); font-size: 19px; font-weight: 800; letter-spacing: -0.02em; }
 
 .quiz-header__icon {
@@ -46,7 +48,7 @@
   font-size: 24px;
 }
 
-.quiz-header h1 { font-size: clamp(24px, 5vw, 34px); line-height: 1.15; letter-spacing: -0.03em; }
+.quiz-header h1 { min-width: 0; overflow-wrap: anywhere; font-size: clamp(24px, 5vw, 34px); line-height: 1.15; letter-spacing: -0.03em; }
 .quiz-brand h1 { color: var(--muted); font-size: 13px; font-weight: 500; line-height: 1.35; letter-spacing: 0; }
 .auth-page { display: grid; gap: 20px; }
 .auth-page .quiz-card { width: 100%; }
@@ -56,11 +58,20 @@
 .not-found-card > p:not(.eyebrow) { margin-bottom: 28px; color: var(--muted); }
 
 @media (max-width: 600px) {
-  .quiz-page { align-items: start; padding: 28px 16px; }
-  .quiz-header { flex-wrap: wrap; }
+  .quiz-page { align-items: start; padding: 24px 16px; }
+  .quiz-header { flex-wrap: wrap; align-items: center; gap: 14px; margin-bottom: 22px; }
   .quiz-header__icon { width: 46px; height: 46px; }
-  .user-menu { width: auto; margin-left: 0; }
+  .quiz-brand { gap: 10px; }
+  .user-menu { width: 100%; margin-left: 0; }
   .user-menu__sign-out { margin-left: auto; }
   .quiz-card { border-radius: 16px; }
   .profile-stats { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 420px) {
+  .quiz-page { padding: 18px 12px; }
+  .quiz-header__icon { width: 42px; height: 42px; }
+  .quiz-header > .quiz-header__icon + div { min-width: 0; flex: 1; }
+  .quiz-header h1 { font-size: 22px; }
+  .quiz-card { padding: 20px 16px; }
 }
