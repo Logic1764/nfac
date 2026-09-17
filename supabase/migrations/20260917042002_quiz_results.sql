@@ -3,8 +3,8 @@
 create table public.quiz_results (
   id uuid primary key default gen_random_uuid(),
   user_id uuid not null references auth.users (id) on delete cascade,
-  score integer not null check (score >= 0 and score <= total_questions),
-  total_questions integer not null check (total_questions > 0),
+  score integer not null,
+  total_questions integer not null,
   created_at timestamptz not null default now()
 );
 
