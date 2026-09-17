@@ -1,12 +1,14 @@
-import { useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Auth } from '../components/Auth';
 import { QuestionCard } from '../components/QuestionCard';
 import { QuizIntro } from '../components/QuizIntro';
 import { ResultCard } from '../components/ResultCard';
 import { UserMenu } from '../components/UserMenu';
+import { XpCard } from '../components/XpCard';
 import { useAuthSession } from '../lib/AuthSessionContext';
 import { astronomyQuestions } from '../lib/astronomyQuestions';
-import { saveQuizResult } from '../lib/quizResults';
+import { loadQuizResults, saveQuizResult } from '../lib/quizResults';
+import { calculateXpProgress, type XpProgress } from '../lib/xp';
 
 export function HomePage() {
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -14,6 +16,25 @@ export function HomePage() {
   const [hasStarted, setHasStarted] = useState(false);
   const { user, isInitialized } = useAuthSession();
   const savedResult = useRef(false);
+  const [xpProgress, setXpProgress] = useState<XpProgress | null>(null);
+
+  const refreshXp = useCallback(async () => {
+    if (!user) {
+      setXpProgress(null);
+      return;
+    }
+
+    try {
+      const results = await loadQuizResults(user.id);
+      setXpProgress(calculateXpProgress(results));
+    } catch {
+      setXpProgress(null);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    void refreshXp();
+  }, [refreshXp]);
 
   const isFinished = questionIndex === astronomyQuestions.length;
 
@@ -27,7 +48,10 @@ export function HomePage() {
 
     if (isLastQuestion && !savedResult.current) {
       savedResult.current = true;
-      void saveQuizResult(user?.id ?? null, nextScore, astronomyQuestions.length);
+      void saveQuizResult(user?.id ?? null, nextScore, astronomyQuestions.length)
+        .then((wasSaved) => {
+          if (wasSaved) void refreshXp();
+        });
     }
   }
 
@@ -52,6 +76,8 @@ export function HomePage() {
           </div>
           <UserMenu />
         </header>
+
+        {user && xpProgress ? <XpCard progress={xpProgress} compact /> : null}
 
         {!isInitialized ? (
           <section className="quiz-card" aria-live="polite">Проверяем вход…</section>
