@@ -22,6 +22,7 @@
 }
 
 .quiz-shell { position: relative; width: min(100%, 760px); min-width: 0; }
+.quiz-setup { display: grid; gap: 18px; }
 
 .quiz-header {
   display: flex;
