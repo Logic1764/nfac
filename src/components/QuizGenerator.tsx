@@ -33,12 +33,16 @@ export function QuizGenerator({ onGenerated }: QuizGeneratorProps) {
       <h2 id="generator-title">Выбери тему для нового полёта</h2>
       <form className="generator-form" onSubmit={handleSubmit}>
         <label htmlFor="quiz-topic">Тема викторины</label>
+        <p className="generator-form__hint" id="quiz-topic-hint">
+          Введите тему, например: Марс, Сатурн или черные дыры.
+        </p>
         <div className="generator-form__controls">
           <input
+            aria-describedby="quiz-topic-hint"
             id="quiz-topic"
             maxLength={120}
             onChange={(event) => setTopic(event.target.value)}
-            placeholder="Например, чёрные дыры"
+            placeholder="Например, Марс"
             type="text"
             value={topic}
           />
