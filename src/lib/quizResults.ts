@@ -4,13 +4,16 @@ export async function saveQuizResult(
   score: number,
   totalQuestions: number,
 ): Promise<boolean> {
-  if (!isSupabaseConfigured) return false;
+  if (!isSupabaseConfigured) {
+    console.log('Quiz result save attempt:', { userId: null, success: false });
+    return false;
+  }
 
   const { data, error: sessionError } = await supabase.auth.getSession();
-  const userId = data.session?.user.id;
+  const userId = data.session?.user?.id;
 
   if (sessionError || !userId) {
-    console.log('Сохранение результата викторины:', { userId: null, success: false });
+    console.log('Quiz result save attempt:', { userId: null, success: false });
     if (sessionError) console.error('Не удалось получить сессию:', sessionError);
     return false;
   }
@@ -21,7 +24,7 @@ export async function saveQuizResult(
     total_questions: totalQuestions,
   });
 
-  console.log('Сохранение результата викторины:', { userId, success: !error });
+  console.log('Quiz result save attempt:', { userId, success: !error });
 
   if (error) {
     console.error('Не удалось сохранить результат викторины:', error);

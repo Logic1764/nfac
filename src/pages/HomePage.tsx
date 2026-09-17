@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { QuestionCard } from '../components/QuestionCard';
 import { ResultCard } from '../components/ResultCard';
 import { UserMenu } from '../components/UserMenu';
@@ -14,20 +14,18 @@ export function HomePage() {
 
   const isFinished = questionIndex === astronomyQuestions.length;
 
-  useEffect(() => {
-    if (!isFinished || isSessionLoading || savedResult.current) return;
-
-    savedResult.current = true;
-    void saveQuizResult(score, astronomyQuestions.length);
-  }, [isFinished, isSessionLoading, score]);
-
   function handleAnswer(answerIndex: number) {
     const isCorrect = answerIndex === astronomyQuestions[questionIndex].correctAnswer;
     const nextScore = score + (isCorrect ? 1 : 0);
+    const isLastQuestion = questionIndex === astronomyQuestions.length - 1;
 
     setScore(nextScore);
-
     setQuestionIndex((currentIndex) => currentIndex + 1);
+
+    if (isLastQuestion && !savedResult.current) {
+      savedResult.current = true;
+      void saveQuizResult(nextScore, astronomyQuestions.length);
+    }
   }
 
   function restartQuiz() {
