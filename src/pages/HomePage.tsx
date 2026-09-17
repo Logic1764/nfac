@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Auth } from '../components/Auth';
+import { OnboardingIntro } from '../components/OnboardingIntro';
 import { QuestionCard } from '../components/QuestionCard';
 import { QuizGenerator } from '../components/QuizGenerator';
 import { QuizIntro } from '../components/QuizIntro';
@@ -19,18 +20,23 @@ export function HomePage() {
   const { user, isInitialized } = useAuthSession();
   const savedResult = useRef(false);
   const [xpProgress, setXpProgress] = useState<XpProgress | null>(null);
+  const [hasSavedResults, setHasSavedResults] = useState<boolean | null>(null);
+  const [firstResultSaved, setFirstResultSaved] = useState(false);
 
   const refreshXp = useCallback(async () => {
     if (!user) {
       setXpProgress(null);
+      setHasSavedResults(null);
       return;
     }
 
     try {
       const results = await loadQuizResults(user.id);
       setXpProgress(calculateXpProgress(results));
+      setHasSavedResults(results.length > 0);
     } catch {
       setXpProgress(null);
+      setHasSavedResults(null);
     }
   }, [user]);
 
@@ -52,7 +58,11 @@ export function HomePage() {
       savedResult.current = true;
       void saveQuizResult(user?.id ?? null, nextScore, questions.length)
         .then((wasSaved) => {
-          if (wasSaved) void refreshXp();
+          if (wasSaved) {
+            if (hasSavedResults === false) setFirstResultSaved(true);
+            setHasSavedResults(true);
+            void refreshXp();
+          }
         });
     }
   }
@@ -61,6 +71,7 @@ export function HomePage() {
     setQuestionIndex(0);
     setScore(0);
     savedResult.current = false;
+    setFirstResultSaved(false);
     setHasStarted(true);
   }
 
@@ -69,6 +80,7 @@ export function HomePage() {
     setQuestionIndex(0);
     setScore(0);
     savedResult.current = false;
+    setFirstResultSaved(false);
     setHasStarted(true);
   }
 
@@ -95,6 +107,7 @@ export function HomePage() {
           <Auth />
         ) : !hasStarted ? (
           <div className="quiz-setup">
+            <OnboardingIntro />
             <QuizGenerator onGenerated={startGeneratedQuiz} />
             <QuizIntro questionCount={questions.length} onStart={() => setHasStarted(true)} />
           </div>
@@ -104,6 +117,7 @@ export function HomePage() {
             total={questions.length}
             onRestart={restartQuiz}
             needsSignIn={false}
+            firstResultSaved={firstResultSaved}
           />
         ) : (
           <QuestionCard

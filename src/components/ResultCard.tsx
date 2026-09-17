@@ -5,9 +5,16 @@ type ResultCardProps = {
   total: number;
   onRestart: () => void;
   needsSignIn: boolean;
+  firstResultSaved?: boolean;
 };
 
-export function ResultCard({ score, total, onRestart, needsSignIn }: ResultCardProps) {
+export function ResultCard({
+  score,
+  total,
+  onRestart,
+  needsSignIn,
+  firstResultSaved = false,
+}: ResultCardProps) {
   const percentage = Math.round((score / total) * 100);
 
   return (
@@ -19,6 +26,9 @@ export function ResultCard({ score, total, onRestart, needsSignIn }: ResultCardP
         {score} <span>из {total}</span>
       </p>
       <p className="result-percentage">{percentage}% правильных ответов</p>
+      {firstResultSaved && (
+        <p className="result-card__success" role="status">Готово! Первый результат сохранен.</p>
+      )}
       <p className="result-message">Отличный полёт! Теперь ты знаешь о космосе ещё больше.</p>
       {needsSignIn && (
         <p className="result-message">

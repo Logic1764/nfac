@@ -17,7 +17,10 @@ export function ProfileStats({ results }: ProfileStatsProps) {
     return (
       <>
         <XpCard progress={xpProgress} />
-        <p className="profile-empty">Вы еще не проходили тесты</p>
+        <div className="profile-empty">
+          <p>Вы еще не проходили викторины. Создайте первую тему и проверьте себя.</p>
+          <p>Статистика появится после первого завершенного теста.</p>
+        </div>
       </>
     );
   }
