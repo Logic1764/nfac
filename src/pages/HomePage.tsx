@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
 import { Auth } from '../components/Auth';
 import { QuestionCard } from '../components/QuestionCard';
+import { QuizIntro } from '../components/QuizIntro';
 import { ResultCard } from '../components/ResultCard';
 import { UserMenu } from '../components/UserMenu';
 import { useAuthSession } from '../lib/AuthSessionContext';
@@ -10,6 +11,7 @@ import { saveQuizResult } from '../lib/quizResults';
 export function HomePage() {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
   const { user, isInitialized } = useAuthSession();
   const savedResult = useRef(false);
 
@@ -33,6 +35,7 @@ export function HomePage() {
     setQuestionIndex(0);
     setScore(0);
     savedResult.current = false;
+    setHasStarted(true);
   }
 
   return (
@@ -52,6 +55,8 @@ export function HomePage() {
           <section className="quiz-card" aria-live="polite">Проверяем вход…</section>
         ) : !user ? (
           <Auth />
+        ) : !hasStarted ? (
+          <QuizIntro questionCount={astronomyQuestions.length} onStart={() => setHasStarted(true)} />
         ) : isFinished ? (
           <ResultCard
             score={score}
