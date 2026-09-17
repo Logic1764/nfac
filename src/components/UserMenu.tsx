@@ -3,11 +3,11 @@ import { useAuthSession } from '../lib/AuthSessionContext';
 import { supabase } from '../lib/supabase';
 
 export function UserMenu() {
-  const { session } = useAuthSession();
+  const { user, clearAuth } = useAuthSession();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  if (!session) return null;
+  if (!user) return null;
 
   async function handleSignOut() {
     setIsSigningOut(true);
@@ -18,12 +18,15 @@ export function UserMenu() {
     if (error) {
       setErrorMessage('Не удалось выйти. Попробуй ещё раз.');
       setIsSigningOut(false);
+      return;
     }
+
+    clearAuth();
   }
 
   return (
     <div className="user-menu">
-      <span className="user-menu__email">{session.user.email}</span>
+      <span className="user-menu__email">{user.email}</span>
       <button
         className="user-menu__sign-out"
         disabled={isSigningOut}

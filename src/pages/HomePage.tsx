@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { Auth } from '../components/Auth';
 import { QuestionCard } from '../components/QuestionCard';
 import { ResultCard } from '../components/ResultCard';
 import { UserMenu } from '../components/UserMenu';
@@ -9,7 +10,7 @@ import { saveQuizResult } from '../lib/quizResults';
 export function HomePage() {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
-  const { session, isLoading: isSessionLoading } = useAuthSession();
+  const { user, isInitialized } = useAuthSession();
   const savedResult = useRef(false);
 
   const isFinished = questionIndex === astronomyQuestions.length;
@@ -24,7 +25,7 @@ export function HomePage() {
 
     if (isLastQuestion && !savedResult.current) {
       savedResult.current = true;
-      void saveQuizResult(nextScore, astronomyQuestions.length);
+      void saveQuizResult(user?.id ?? null, nextScore, astronomyQuestions.length);
     }
   }
 
@@ -47,12 +48,16 @@ export function HomePage() {
           <UserMenu />
         </header>
 
-        {isFinished ? (
+        {!isInitialized ? (
+          <section className="quiz-card" aria-live="polite">Проверяем вход…</section>
+        ) : !user ? (
+          <Auth />
+        ) : isFinished ? (
           <ResultCard
             score={score}
             total={astronomyQuestions.length}
             onRestart={restartQuiz}
-            needsSignIn={!isSessionLoading && !session}
+            needsSignIn={false}
           />
         ) : (
           <QuestionCard
