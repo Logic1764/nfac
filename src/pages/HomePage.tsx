@@ -1,14 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { QuestionCard } from '../components/QuestionCard';
 import { ResultCard } from '../components/ResultCard';
+import { useAuthSession } from '../lib/AuthSessionContext';
 import { astronomyQuestions } from '../lib/astronomyQuestions';
 import { saveQuizResult } from '../lib/quizResults';
 
 export function HomePage() {
   const [questionIndex, setQuestionIndex] = useState(0);
   const [score, setScore] = useState(0);
+  const { session, isLoading: isSessionLoading } = useAuthSession();
+  const savedResult = useRef(false);
 
   const isFinished = questionIndex === astronomyQuestions.length;
+
+  useEffect(() => {
+    if (!isFinished || isSessionLoading || !session || savedResult.current) return;
+
+    savedResult.current = true;
+    void saveQuizResult(session.user.id, score, astronomyQuestions.length);
+  }, [isFinished, isSessionLoading, score, session]);
 
   function handleAnswer(answerIndex: number) {
     const isCorrect = answerIndex === astronomyQuestions[questionIndex].correctAnswer;
@@ -16,16 +26,13 @@ export function HomePage() {
 
     setScore(nextScore);
 
-    if (questionIndex === astronomyQuestions.length - 1) {
-      void saveQuizResult(nextScore, astronomyQuestions.length);
-    }
-
     setQuestionIndex((currentIndex) => currentIndex + 1);
   }
 
   function restartQuiz() {
     setQuestionIndex(0);
     setScore(0);
+    savedResult.current = false;
   }
 
   return (
@@ -45,6 +52,7 @@ export function HomePage() {
             score={score}
             total={astronomyQuestions.length}
             onRestart={restartQuiz}
+            needsSignIn={!isSessionLoading && !session}
           />
         ) : (
           <QuestionCard
