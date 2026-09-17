@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { QuestionCard } from '../components/QuestionCard';
 import { ResultCard } from '../components/ResultCard';
 import { astronomyQuestions } from '../lib/astronomyQuestions';
+import { saveQuizResult } from '../lib/quizResults';
 
 export function HomePage() {
   const [questionIndex, setQuestionIndex] = useState(0);
@@ -10,8 +11,13 @@ export function HomePage() {
   const isFinished = questionIndex === astronomyQuestions.length;
 
   function handleAnswer(answerIndex: number) {
-    if (answerIndex === astronomyQuestions[questionIndex].correctAnswer) {
-      setScore((currentScore) => currentScore + 1);
+    const isCorrect = answerIndex === astronomyQuestions[questionIndex].correctAnswer;
+    const nextScore = score + (isCorrect ? 1 : 0);
+
+    setScore(nextScore);
+
+    if (questionIndex === astronomyQuestions.length - 1) {
+      void saveQuizResult(nextScore, astronomyQuestions.length);
     }
 
     setQuestionIndex((currentIndex) => currentIndex + 1);
