@@ -15,11 +15,11 @@ export function HomePage() {
   const isFinished = questionIndex === astronomyQuestions.length;
 
   useEffect(() => {
-    if (!isFinished || isSessionLoading || !session || savedResult.current) return;
+    if (!isFinished || isSessionLoading || savedResult.current) return;
 
     savedResult.current = true;
-    void saveQuizResult(session.user.id, score, astronomyQuestions.length);
-  }, [isFinished, isSessionLoading, score, session]);
+    void saveQuizResult(score, astronomyQuestions.length);
+  }, [isFinished, isSessionLoading, score]);
 
   function handleAnswer(answerIndex: number) {
     const isCorrect = answerIndex === astronomyQuestions[questionIndex].correctAnswer;
