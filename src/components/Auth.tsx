@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useAuthSession } from '../lib/AuthSessionContext';
 import { isSupabaseConfigured, supabase } from '../lib/supabase';
 import { SupabaseSetupMessage } from './SupabaseSetupMessage';
 
 // Вход и регистрация по email + паролю. Это пример — Codex поможет улучшить (Google-вход и т.д.).
 export function Auth() {
+  const { setAuthenticatedSession } = useAuthSession();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
@@ -33,10 +35,12 @@ export function Auth() {
         return;
       }
 
-      console.log('Auth login session:', {
-        userId: data.session?.user.id ?? null,
-        hasSession: Boolean(data.session),
-      });
+      if (!data.session || !data.user) {
+        setMessage('Не удалось открыть сессию. Попробуй войти ещё раз.');
+        return;
+      }
+
+      setAuthenticatedSession(data.session, data.user);
     } catch {
       setMessage('Что-то пошло не так. Попробуй ещё раз.');
     } finally {

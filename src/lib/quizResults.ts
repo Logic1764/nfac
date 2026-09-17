@@ -1,25 +1,12 @@
 import { isSupabaseConfigured, supabase } from './supabase';
 
 export async function saveQuizResult(
+  userId: string | null,
   score: number,
   totalQuestions: number,
 ): Promise<boolean> {
-  if (!isSupabaseConfigured) {
+  if (!isSupabaseConfigured || !userId) {
     console.log('Quiz result save attempt:', { userId: null, success: false });
-    return false;
-  }
-
-  const { data, error: sessionError } = await supabase.auth.getSession();
-  const userId = data.session?.user?.id;
-
-  console.log('Save session:', {
-    userId: userId ?? null,
-    hasSession: Boolean(data.session),
-  });
-
-  if (sessionError || !userId) {
-    console.log('Quiz result save attempt:', { userId: null, success: false });
-    if (sessionError) console.error('Не удалось получить сессию:', sessionError);
     return false;
   }
 
